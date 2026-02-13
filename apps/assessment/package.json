@@ -11,6 +11,7 @@
   "dependencies": {
     "@kinetic/database": "*",
     "@kinetic/ui": "*",
+    "@vercel/analytics": "^1.6.1",
     "@vercel/postgres": "^0.10.0",
     "next": "^15.0.5",
     "react": "^18.3.1",

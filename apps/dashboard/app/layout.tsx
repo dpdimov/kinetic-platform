@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Analytics } from '@vercel/analytics/react'
 import PlatformNav from '@kinetic/ui'
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-gray-50 text-gray-900">
+        <Analytics />
         <PlatformNav currentApp="dashboard" />
         {children}
       </body>

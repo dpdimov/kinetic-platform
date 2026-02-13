@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/react";
 import PlatformNav from "@kinetic/ui";
 
 export const metadata = {
@@ -15,6 +16,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body style={{ margin: 0, padding: 0 }}>
+        <Analytics />
         <PlatformNav currentApp="hub" />
         {children}
       </body>

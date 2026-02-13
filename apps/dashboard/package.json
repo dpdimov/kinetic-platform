@@ -11,6 +11,7 @@
   "dependencies": {
     "@kinetic/database": "*",
     "@kinetic/ui": "*",
+    "@vercel/analytics": "^1.6.1",
     "@vercel/postgres": "^0.10.0",
     "chart.js": "^4.4.0",
     "chartjs-adapter-date-fns": "^3.0.0",
