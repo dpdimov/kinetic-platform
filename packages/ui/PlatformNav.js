@@ -24,7 +24,15 @@ export default function PlatformNav({ currentApp }) {
 
   return (
     <>
+      <style>{`
+        .platform-nav-link { font-size: 15px; padding: 6px 10px; }
+        @media (max-width: 480px) {
+          .platform-nav-link { font-size: 13px; padding: 4px 6px; }
+          .platform-nav { padding: 0 12px !important; }
+        }
+      `}</style>
       <nav
+        className="platform-nav"
         style={{
           position: "fixed",
           top: 0,
@@ -51,6 +59,7 @@ export default function PlatformNav({ currentApp }) {
             display: "flex",
             alignItems: "center",
             textDecoration: "none",
+            flexShrink: 0,
           }}
         >
           <img
@@ -61,18 +70,17 @@ export default function PlatformNav({ currentApp }) {
         </a>
 
         {/* Nav links */}
-        <div style={{ display: "flex", gap: 2, alignItems: "center", overflow: "hidden" }}>
+        <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
           {APPS.slice(1).map((app) => {
             const isActive = currentApp === app.key;
             return (
               <a
                 key={app.key}
                 href={getHref(app)}
+                className="platform-nav-link"
                 style={{
-                  fontSize: 15,
                   color: isActive ? "#1f2937" : "#6b7280",
                   textDecoration: "none",
-                  padding: "6px 10px",
                   borderRadius: 4,
                   background: isActive ? "#f3f4f6" : "transparent",
                   transition: "all 0.15s ease",
