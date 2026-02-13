@@ -1,0 +1,9 @@
+{
+  "name": "@kinetic/visualization",
+  "version": "1.0.0",
+  "private": true,
+  "main": "KineticMatrix.js",
+  "exports": {
+    ".": "./KineticMatrix.js"
+  }
+}

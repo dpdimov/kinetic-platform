@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import KineticMatrix from "@kinetic/visualization";
 import {
   FRAMEWORKS,
   CROSS_FRAMEWORK_TENSIONS,
@@ -142,70 +143,10 @@ function parseStyleResults(text) {
 // ─────────────────────────────────────────────────
 
 function StyleMatrix({ data }) {
-  const canvasRef = useRef(null);
-  const imgRef = useRef(null);
   const fw = data.framework;
   const colors = FRAMEWORK_COLORS[fw] || FRAMEWORK_COLORS.thinking;
   const accent = colors[data.style] || colors.default;
   const bgSrc = FRAMEWORK_BACKGROUNDS[fw] || FRAMEWORK_BACKGROUNDS.thinking;
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const draw = () => {
-      const ctx = canvas.getContext("2d");
-      const dpr = window.devicePixelRatio || 1;
-      const maxW = Math.min(280, canvas.parentElement?.clientWidth || 280);
-      const displayW = maxW;
-      const displayH = maxW;
-      canvas.width = displayW * dpr;
-      canvas.height = displayH * dpr;
-      canvas.style.width = displayW + "px";
-      canvas.style.height = displayH + "px";
-      ctx.scale(dpr, dpr);
-
-      const w = displayW, h = displayH;
-
-      ctx.clearRect(0, 0, w, h);
-
-      // Draw background image if loaded
-      if (imgRef.current) {
-        ctx.drawImage(imgRef.current, 0, 0, w, h);
-      }
-
-      // Plot point
-      const cx = w / 2, cy = h / 2;
-      const plotRange = (w / 2) * (10 / 12);
-      const plotX = cx + (data.dim1_score / 10) * plotRange;
-      const plotY = cy - (data.dim2_score / 10) * plotRange;
-
-      // Glow
-      const gradient = ctx.createRadialGradient(plotX, plotY, 0, plotX, plotY, 24);
-      gradient.addColorStop(0, accent + "80");
-      gradient.addColorStop(1, accent + "00");
-      ctx.fillStyle = gradient;
-      ctx.beginPath(); ctx.arc(plotX, plotY, 24, 0, Math.PI * 2); ctx.fill();
-
-      // Point
-      ctx.fillStyle = accent;
-      ctx.beginPath(); ctx.arc(plotX, plotY, 6, 0, Math.PI * 2); ctx.fill();
-
-      // Ring
-      ctx.strokeStyle = accent + "80";
-      ctx.lineWidth = 1.5;
-      ctx.beginPath(); ctx.arc(plotX, plotY, 10, 0, Math.PI * 2); ctx.stroke();
-    };
-
-    // Load image then draw
-    if (!imgRef.current || imgRef.current.src !== bgSrc) {
-      const img = new Image();
-      img.onload = () => { imgRef.current = img; draw(); };
-      img.src = bgSrc;
-    } else {
-      draw();
-    }
-  }, [data, accent, bgSrc]);
 
   return (
     <div style={{
@@ -233,7 +174,13 @@ function StyleMatrix({ data }) {
         </div>
       </div>
       <div style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap", justifyContent: "center" }}>
-        <canvas ref={canvasRef} />
+        <KineticMatrix
+          dim1Score={data.dim1_score}
+          dim2Score={data.dim2_score}
+          accentColor={accent}
+          backgroundSrc={bgSrc}
+          maxSize={280}
+        />
         <div style={{ flex: 1, minWidth: 200, width: "100%" }}>
           <DimScore label={data.dim1_label} left={data.dim1_left} right={data.dim1_right} score={data.dim1_score} color={accent} />
           <DimScore label={data.dim2_label} left={data.dim2_left} right={data.dim2_right} score={data.dim2_score} color={accent} />

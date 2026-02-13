@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import mammoth from "mammoth";
+import KineticMatrix from "@kinetic/visualization";
 import { FRAMEWORKS, frameworkSummaryForPrompt } from "@kinetic/frameworks";
 
 // Build system prompt from shared framework definitions
@@ -50,72 +51,16 @@ const styleColors = Object.fromEntries(
 );
 
 function KTSMatrix({ uncertaintyScore, possibilityScore, style }) {
-  const canvasRef = useRef(null);
-  const imgRef = useRef(null);
-
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-
-    const draw = () => {
-      const ctx = canvas.getContext("2d");
-      const dpr = window.devicePixelRatio || 1;
-      const displayW = 400;
-      const displayH = 400;
-      canvas.width = displayW * dpr;
-      canvas.height = displayH * dpr;
-      canvas.style.width = "100%";
-      canvas.style.maxWidth = displayW + "px";
-      canvas.style.height = "auto";
-      ctx.scale(dpr, dpr);
-
-      const w = displayW, h = displayH;
-
-      ctx.clearRect(0, 0, w, h);
-
-      // Draw background image if loaded
-      if (imgRef.current) {
-        ctx.drawImage(imgRef.current, 0, 0, w, h);
-      }
-
-      if (uncertaintyScore !== null && possibilityScore !== null) {
-        // Map scores to canvas coordinates
-        // The image plot area is inset: labels sit outside the colored borders
-        // Matching the 10/12 ratio from the results-view Chart.tsx
-        const cx = w / 2, cy = h / 2;
-        const plotRange = (w / 2) * (10 / 12); // usable plot radius
-        const plotX = cx + (uncertaintyScore / 10) * plotRange;
-        const plotY = cy - (possibilityScore / 10) * plotRange;
-        const color = styleColors[style] || styleColors.Focused;
-
-        // Glow
-        const gradient = ctx.createRadialGradient(plotX, plotY, 0, plotX, plotY, 30);
-        gradient.addColorStop(0, color.accent + "80");
-        gradient.addColorStop(1, color.accent + "00");
-        ctx.fillStyle = gradient;
-        ctx.beginPath(); ctx.arc(plotX, plotY, 30, 0, Math.PI * 2); ctx.fill();
-
-        // Point
-        ctx.fillStyle = color.accent;
-        ctx.beginPath(); ctx.arc(plotX, plotY, 7, 0, Math.PI * 2); ctx.fill();
-
-        // Ring
-        ctx.strokeStyle = color.accent + "80"; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.arc(plotX, plotY, 12, 0, Math.PI * 2); ctx.stroke();
-      }
-    };
-
-    // Load image then draw
-    if (!imgRef.current) {
-      const img = new Image();
-      img.onload = () => { imgRef.current = img; draw(); };
-      img.src = "/images/plot-background.png";
-    } else {
-      draw();
-    }
-  }, [uncertaintyScore, possibilityScore, style]);
-
-  return <canvas ref={canvasRef} style={{ borderRadius: 8 }} />;
+  const color = styleColors[style] || styleColors.Focused;
+  return (
+    <KineticMatrix
+      dim1Score={uncertaintyScore}
+      dim2Score={possibilityScore}
+      accentColor={color.accent}
+      backgroundSrc="/images/plot-background.png"
+      maxSize={400}
+    />
+  );
 }
 
 function DimensionBar({ label, leftLabel, rightLabel, score, color }) {
