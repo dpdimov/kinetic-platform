@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/assess/:path*", "destination": "https://kinetic-assessment.vercel.app/assess/:path*" },
+    { "source": "/dashboard/:path*", "destination": "https://kinetic-dashboard.vercel.app/dashboard/:path*" },
+    { "source": "/analyze/:path*", "destination": "https://kinetic-analyzer.vercel.app/analyze/:path*" },
+    { "source": "/coach/:path*", "destination": "https://kinetic-coach.vercel.app/coach/:path*" }
+  ]
+}
