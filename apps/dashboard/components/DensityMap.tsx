@@ -92,10 +92,10 @@ export default function DensityMap({
     // Clear canvas
     ctx.clearRect(0, 0, width, height);
 
-    // Draw background image if available
+    // Draw background image if available (full opacity — density blends on top)
     if (backgroundImg) {
       ctx.save();
-      ctx.globalAlpha = 0.7; // Semi-transparent background
+      ctx.globalAlpha = 1.0;
       ctx.drawImage(backgroundImg, 0, 0, width, height);
       ctx.restore();
     }
@@ -192,7 +192,7 @@ export default function DensityMap({
   };
 
   const getHeatmapColor = (intensity: number): { r: number; g: number; b: number; a: number } => {
-    // Grey-to-teal gradient: light grey → medium grey → grey-teal → teal → deep teal
+    // Grey-to-cyan gradient matching Tableau density style
     if (intensity === 0) {
       return { r: 0, g: 0, b: 0, a: 0 };
     }
@@ -201,30 +201,30 @@ export default function DensityMap({
     const alpha = Math.min(alphaRange.max, alphaRange.min + intensity * (alphaRange.max - alphaRange.min));
 
     if (intensity < 0.33) {
-      // Light grey to medium grey-teal
+      // Light grey to grey-cyan
       const t = intensity / 0.33;
       return {
-        r: Math.floor(180 - t * 60),   // 180 → 120
-        g: Math.floor(180 - t * 30),   // 180 → 150
-        b: Math.floor(180 - t * 20),   // 180 → 160
+        r: Math.floor(200 - t * 80),   // 200 → 120
+        g: Math.floor(200 - t * 20),   // 200 → 180
+        b: Math.floor(200 - t * 10),   // 200 → 190
         a: alpha
       };
     } else if (intensity < 0.66) {
-      // Medium grey-teal to teal
+      // Grey-cyan to bright cyan
       const t = (intensity - 0.33) / 0.33;
       return {
         r: Math.floor(120 - t * 80),   // 120 → 40
-        g: Math.floor(150 + t * 30),   // 150 → 180
-        b: Math.floor(160 + t * 20),   // 160 → 180
+        g: Math.floor(180 + t * 2),    // 180 → 182
+        b: Math.floor(190 + t * 24),   // 190 → 214
         a: alpha
       };
     } else {
-      // Teal to deep teal
+      // Bright cyan to deep cyan
       const t = (intensity - 0.66) / 0.34;
       return {
         r: Math.floor(40 - t * 30),    // 40 → 10
-        g: Math.floor(180 - t * 30),   // 180 → 150
-        b: Math.floor(180 - t * 20),   // 180 → 160
+        g: Math.floor(182 - t * 10),   // 182 → 172
+        b: Math.floor(214 - t * 10),   // 214 → 204
         a: alpha
       };
     }
@@ -266,11 +266,11 @@ export default function DensityMap({
         <div className="flex items-center space-x-4 text-sm text-gray-600">
           <span>Low density</span>
           <div className="flex h-4 w-32 rounded overflow-hidden">
-            <div className="w-1/5" style={{ background: '#b4b4b4' }}></div>
-            <div className="w-1/5" style={{ background: '#789696' }}></div>
-            <div className="w-1/5" style={{ background: '#50a0a0' }}></div>
-            <div className="w-1/5" style={{ background: '#28b4b4' }}></div>
-            <div className="w-1/5" style={{ background: '#0a96a0' }}></div>
+            <div className="w-1/5" style={{ background: '#c8c8c8' }}></div>
+            <div className="w-1/5" style={{ background: '#78b4be' }}></div>
+            <div className="w-1/5" style={{ background: '#40b4d0' }}></div>
+            <div className="w-1/5" style={{ background: '#28b6d6' }}></div>
+            <div className="w-1/5" style={{ background: '#0aaccc' }}></div>
           </div>
           <span>High density</span>
         </div>
