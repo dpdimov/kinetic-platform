@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-const PLATFORM_URL = process.env.NEXT_PUBLIC_PLATFORM_URL || "";
-
 const TOOLS = [
   {
     key: "assessment",
@@ -44,11 +42,11 @@ const TOOLS = [
 ];
 
 function getHref(tool) {
-  if (PLATFORM_URL) {
-    return PLATFORM_URL + tool.path;
+    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+      return `http://localhost:${tool.devPort}${tool.path}`;
+    }
+    return tool.path;
   }
-  return `http://localhost:${tool.devPort}${tool.path}`;
-}
 
 export default function HubPage() {
   const [aboutOpen, setAboutOpen] = useState(false);
