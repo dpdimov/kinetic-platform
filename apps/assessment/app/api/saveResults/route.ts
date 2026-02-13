@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { DatabaseService, getClientIP, extractEmailDomain } from '@/lib/database'
+import { DatabaseService, getClientIP, extractEmailDomain } from '@kinetic/database'
 import { AssessmentScore } from '@/lib/scoringEngine'
 
 interface AssessmentResult {

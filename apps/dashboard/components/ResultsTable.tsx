@@ -1,6 +1,6 @@
 'use client';
 
-import { AssessmentResult } from '@/lib/database';
+import { AssessmentResult } from '@kinetic/database';
 
 interface ResultsTableProps {
   results: AssessmentResult[];

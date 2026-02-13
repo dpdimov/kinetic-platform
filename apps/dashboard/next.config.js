@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ['@kinetic/database'],
   typescript: {
     ignoreBuildErrors: false,
   },

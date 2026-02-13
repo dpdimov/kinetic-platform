@@ -1,0 +1,12 @@
+{
+  "name": "@kinetic/database",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "dependencies": {
+    "@vercel/postgres": "^0.10.0"
+  }
+}

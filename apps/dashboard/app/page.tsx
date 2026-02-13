@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AssessmentResult } from '@/lib/database';
+import { AssessmentResult } from '@kinetic/database';
 import FilterPanel from '@/components/FilterPanel';
 import PublicFilterPanel from '@/components/PublicFilterPanel';
 import AnalyticsPanel from '@/components/AnalyticsPanel';

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { AssessmentResult } from '@/lib/database';
+import { AssessmentResult } from '@kinetic/database';
 import { getAssessmentConfig } from '@/lib/config';
 
 interface DensityMapProps {

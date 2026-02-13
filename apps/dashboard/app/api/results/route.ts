@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { ResultsService } from '@/lib/database';
+import { ResultsService } from '@kinetic/database';
 
 export async function GET(request: NextRequest) {
   try {

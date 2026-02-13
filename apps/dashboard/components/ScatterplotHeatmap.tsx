@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { AssessmentResult } from '@/lib/database';
+import { AssessmentResult } from '@kinetic/database';
 import dynamic from 'next/dynamic';
 
 // Dynamically import components to avoid SSR issues
