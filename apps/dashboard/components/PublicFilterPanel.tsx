@@ -35,7 +35,7 @@ export default function PublicFilterPanel({ onFiltersChange }: PublicFilterPanel
   const fetchFilterOptions = async () => {
     try {
       // Fetch assessment IDs directly from results API
-      const response = await fetch('/api/filters/public');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/filters/public`);
       const data = await response.json();
       setFilterOptions({ assessmentIds: data.assessmentIds || [] });
     } catch (error) {
@@ -64,7 +64,7 @@ export default function PublicFilterPanel({ onFiltersChange }: PublicFilterPanel
         <select
           value={filters.assessmentId}
           onChange={(e) => handleFilterChange(e.target.value)}
-          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-navy-600"
         >
           {filterOptions.assessmentIds.map((id) => (
             <option key={id} value={id}>

@@ -6,7 +6,17 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["'Crimson Pro'", 'Georgia', 'serif'],
+      },
+      colors: {
+        navy: {
+          600: '#002c5f',
+          700: '#001f43',
+        },
+      },
+    },
   },
   plugins: [],
 }

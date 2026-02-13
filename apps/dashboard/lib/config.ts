@@ -43,7 +43,7 @@ const defaultAssessmentConfig: AssessmentConfig = {
     x_coordinate: "X Coordinate",
     y_coordinate: "Y Coordinate"
   },
-  backgroundImage: "/images/plot-background.png",
+  backgroundImage: (typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_BASE_PATH || '' : '') + "/images/plot-background.png",
   visualization: {
     densityConfig: {
       bandwidth: 0.03,
@@ -95,6 +95,11 @@ export async function getCoordinateLabelsForAssessment(assessmentId: string) {
 
 export async function getBackgroundImageForAssessment(assessmentId: string): Promise<string> {
   const config = await getAssessmentConfig(assessmentId);
+  const basePath = typeof process !== 'undefined' ? process.env.NEXT_PUBLIC_BASE_PATH || '' : '';
+  // Prepend basePath if the image path doesn't already include it
+  if (config.backgroundImage && !config.backgroundImage.startsWith(basePath)) {
+    return basePath + config.backgroundImage;
+  }
   return config.backgroundImage;
 }
 

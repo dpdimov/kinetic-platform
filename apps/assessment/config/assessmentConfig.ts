@@ -145,7 +145,7 @@ export const DEFAULT_SETTINGS: AssessmentSettings = {
 // Load assessment registry
 export async function loadAssessmentRegistry(): Promise<AssessmentRegistry> {
   try {
-    const response = await fetch('/config/assessments/index.json')
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/config/assessments/index.json`)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
@@ -166,7 +166,7 @@ export async function loadAssessmentConfig(assessmentId?: string): Promise<Asses
       assessmentId = registry.defaultAssessment
     }
 
-    const response = await fetch(`/config/assessments/${assessmentId}.json`)
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/config/assessments/${assessmentId}.json`)
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }

@@ -124,7 +124,7 @@ export default function Home() {
     
     try {
       // Send results to API
-      const response = await fetch('/api/saveResults', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/saveResults`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -190,14 +190,14 @@ export default function Home() {
   // Show loading until UI text is loaded
   if (!uiText) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center">
         <div className="text-lg text-gray-600">Loading...</div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-[#fafafa]">
       <div className="container mx-auto px-4 py-16">
         {/* User Info & Logout */}
         {isAuthenticated && user && (
@@ -237,7 +237,7 @@ export default function Home() {
                 <ul className="space-y-3 text-gray-600">
                   {uiText.homePage.whatYoullLearn.items.map((item: string, index: number) => (
                     <li key={index} className="flex items-center">
-                      <div className="w-2 h-2 bg-indigo-600 rounded-full mr-3"></div>
+                      <div className="w-2 h-2 bg-navy-600 rounded-full mr-3"></div>
                       {item}
                     </li>
                   ))}
@@ -274,7 +274,7 @@ export default function Home() {
                   value={customCode}
                   onChange={(e) => setCustomCode(e.target.value)}
                   placeholder="Enter group or organization code"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent"
                   maxLength={50}
                 />
                 <p className="text-xs text-gray-500 mt-1">For grouping results by organization or study group</p>
@@ -289,7 +289,7 @@ export default function Home() {
                   value={emailDomain}
                   onChange={(e) => setEmailDomain(e.target.value)}
                   placeholder="e.g., company.com"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent"
                 />
                 <p className="text-xs text-gray-500 mt-1">For organizational analytics (domain only, not full email)</p>
               </div>
@@ -301,7 +301,7 @@ export default function Home() {
             <button
               onClick={handleStartAssessment}
               disabled={isLoading}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="bg-navy-600 hover:bg-navy-700 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? uiText.homePage.buttons.processing : uiText.homePage.buttons.startAssessment}
             </button>

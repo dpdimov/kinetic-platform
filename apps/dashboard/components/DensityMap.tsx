@@ -21,7 +21,7 @@ export default function DensityMap({
   results, 
   width = 500, 
   height = 500, 
-  backgroundImage = '/images/plot-background.png',
+  backgroundImage = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/plot-background.png`,
   assessmentId = 'kinetic-thinking'
 }: DensityMapProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -192,48 +192,39 @@ export default function DensityMap({
   };
 
   const getHeatmapColor = (intensity: number): { r: number; g: number; b: number; a: number } => {
-    // Create a smooth color gradient from transparent blue through green, yellow, to red
+    // Grey-to-teal gradient: light grey → medium grey → grey-teal → teal → deep teal
     if (intensity === 0) {
-      return { r: 0, g: 0, b: 0, a: 0 }; // Transparent for zero density
+      return { r: 0, g: 0, b: 0, a: 0 };
     }
 
     const alphaRange = config?.visualization?.densityConfig?.alphaRange || { min: 30, max: 150 };
-    const alpha = Math.min(alphaRange.max, alphaRange.min + intensity * (alphaRange.max - alphaRange.min)); // Configurable transparency
+    const alpha = Math.min(alphaRange.max, alphaRange.min + intensity * (alphaRange.max - alphaRange.min));
 
-    if (intensity < 0.25) {
-      // Blue to Cyan
-      const t = intensity * 4;
+    if (intensity < 0.33) {
+      // Light grey to medium grey-teal
+      const t = intensity / 0.33;
       return {
-        r: 0,
-        g: Math.floor(t * 255),
-        b: 255,
+        r: Math.floor(180 - t * 60),   // 180 → 120
+        g: Math.floor(180 - t * 30),   // 180 → 150
+        b: Math.floor(180 - t * 20),   // 180 → 160
         a: alpha
       };
-    } else if (intensity < 0.5) {
-      // Cyan to Green
-      const t = (intensity - 0.25) * 4;
+    } else if (intensity < 0.66) {
+      // Medium grey-teal to teal
+      const t = (intensity - 0.33) / 0.33;
       return {
-        r: 0,
-        g: 255,
-        b: Math.floor((1 - t) * 255),
-        a: alpha
-      };
-    } else if (intensity < 0.75) {
-      // Green to Yellow
-      const t = (intensity - 0.5) * 4;
-      return {
-        r: Math.floor(t * 255),
-        g: 255,
-        b: 0,
+        r: Math.floor(120 - t * 80),   // 120 → 40
+        g: Math.floor(150 + t * 30),   // 150 → 180
+        b: Math.floor(160 + t * 20),   // 160 → 180
         a: alpha
       };
     } else {
-      // Yellow to Red
-      const t = (intensity - 0.75) * 4;
+      // Teal to deep teal
+      const t = (intensity - 0.66) / 0.34;
       return {
-        r: 255,
-        g: Math.floor((1 - t) * 255),
-        b: 0,
+        r: Math.floor(40 - t * 30),    // 40 → 10
+        g: Math.floor(180 - t * 30),   // 180 → 150
+        b: Math.floor(180 - t * 20),   // 180 → 160
         a: alpha
       };
     }
@@ -262,7 +253,7 @@ export default function DensityMap({
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75 rounded-lg">
               <div className="flex items-center">
-                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600 mr-3"></div>
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-navy-600 mr-3"></div>
                 <span className="text-gray-600">Generating density map...</span>
               </div>
             </div>
@@ -275,11 +266,11 @@ export default function DensityMap({
         <div className="flex items-center space-x-4 text-sm text-gray-600">
           <span>Low density</span>
           <div className="flex h-4 w-32 rounded overflow-hidden">
-            <div className="w-1/5 bg-blue-500"></div>
-            <div className="w-1/5 bg-cyan-500"></div>
-            <div className="w-1/5 bg-green-500"></div>
-            <div className="w-1/5 bg-yellow-500"></div>
-            <div className="w-1/5 bg-red-500"></div>
+            <div className="w-1/5" style={{ background: '#b4b4b4' }}></div>
+            <div className="w-1/5" style={{ background: '#789696' }}></div>
+            <div className="w-1/5" style={{ background: '#50a0a0' }}></div>
+            <div className="w-1/5" style={{ background: '#28b4b4' }}></div>
+            <div className="w-1/5" style={{ background: '#0a96a0' }}></div>
           </div>
           <span>High density</span>
         </div>

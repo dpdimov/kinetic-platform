@@ -24,7 +24,7 @@ export default function Home() {
   const [publicFilters, setPublicFilters] = useState<any>({ assessmentId: 'kinetic-thinking' });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
-  const [backgroundImage, setBackgroundImage] = useState<string>('/images/plot-background.png');
+  const [backgroundImage, setBackgroundImage] = useState<string>(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/plot-background.png`);
 
   useEffect(() => {
     // Check authentication on component mount
@@ -58,7 +58,7 @@ export default function Home() {
       setBackgroundImage(bgImage);
     } catch (error) {
       console.error('Error loading background image:', error);
-      setBackgroundImage('/images/plot-background.png'); // fallback
+      setBackgroundImage(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/plot-background.png`); // fallback
     }
   };
 
@@ -72,7 +72,7 @@ export default function Home() {
         }
       });
 
-      const response = await fetch(`/api/results?${params}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/results?${params}`);
       const data: ResultsResponse = await response.json();
       
       setResults(data.results);
@@ -94,7 +94,7 @@ export default function Home() {
         }
       });
 
-      const response = await fetch(`/api/results?${params}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/results?${params}`);
       const data: ResultsResponse = await response.json();
       
       setResults(data.results);
@@ -131,7 +131,7 @@ export default function Home() {
   if (!authChecked) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-navy-600"></div>
       </div>
     );
   }
@@ -140,23 +140,25 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900">Kinetic Styles Results</h1>
-              <p className="mt-2 text-gray-600">
-                View and analyze the Kinetic Styles assessments results and visualizations
-              </p>
-            </div>
-            {isAuthenticated && (
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-              >
-                Logout
-              </button>
-            )}
-          </div>
+        <div className="mb-8 text-center">
+          <img
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/kinetic-logo.png`}
+            alt="Kinetic Thinking Styles"
+            className="mx-auto mb-6"
+            style={{ height: 64, width: 'auto' }}
+          />
+          <h1 className="text-3xl font-bold text-gray-900">Kinetic Styles Results</h1>
+          <p className="mt-2 text-gray-600">
+            View and analyze the Kinetic Styles assessments results and visualizations
+          </p>
+          {isAuthenticated && (
+            <button
+              onClick={handleLogout}
+              className="mt-4 bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+            >
+              Logout
+            </button>
+          )}
         </div>
 
         {/* Public Section - Always Visible */}

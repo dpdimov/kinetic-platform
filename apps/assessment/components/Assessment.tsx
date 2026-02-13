@@ -117,7 +117,7 @@ export default function Assessment({ questions, config, onComplete }: Assessment
           </h1>
           <div className="text-lg text-gray-600">
             <div className="mb-2">
-              <span className="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
+              <span className="bg-navy-600/10 text-navy-600 px-3 py-1 rounded-full text-sm font-medium">
                 Part {currentPhase} of 2
               </span>
             </div>
@@ -131,7 +131,7 @@ export default function Assessment({ questions, config, onComplete }: Assessment
         {/* Progress Bar */}
         <div className="w-full bg-gray-200 rounded-full h-2 mb-8">
           <div 
-            className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+            className="bg-navy-600 h-2 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>

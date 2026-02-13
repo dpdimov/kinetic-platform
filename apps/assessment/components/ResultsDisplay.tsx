@@ -41,7 +41,7 @@ export default function ResultsDisplay({ scores, onReturnHome, onRetakeAssessmen
 
   if (loading || !interpretation || !uiText || !displayConfig) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center">
         <div className="text-lg text-gray-600">Loading your results...</div>
       </div>
     )
@@ -54,7 +54,7 @@ export default function ResultsDisplay({ scores, onReturnHome, onRetakeAssessmen
   const plotY = ((1 - y) / 2) * 400 // Invert Y axis for visual display
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8">
+    <div className="min-h-screen bg-[#fafafa] py-8">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-8">
@@ -84,7 +84,7 @@ export default function ResultsDisplay({ scores, onReturnHome, onRetakeAssessmen
                   left: '10px', 
                   top: '10px',
                   borderColor: displayConfig.plotSettings.borderColor,
-                  backgroundImage: displayConfig.backgroundImage.enabled ? `url(${displayConfig.backgroundImage.url})` : 'none',
+                  backgroundImage: displayConfig.backgroundImage.enabled ? `url(${process.env.NEXT_PUBLIC_BASE_PATH || ''}${displayConfig.backgroundImage.url})` : 'none',
                   backgroundSize: displayConfig.backgroundImage.size,
                   backgroundPosition: displayConfig.backgroundImage.position,
                   backgroundRepeat: 'no-repeat'
@@ -120,14 +120,15 @@ export default function ResultsDisplay({ scores, onReturnHome, onRetakeAssessmen
                 
                 
                 {/* User's position */}
-                <div 
-                  className="absolute w-4 h-4 bg-indigo-600 rounded-full border-2 border-white shadow-lg transform -translate-x-2 -translate-y-2"
-                  style={{ left: `${plotX}px`, top: `${plotY}px` }}
-                >
-                  <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-2 py-1 rounded text-xs font-medium whitespace-nowrap">
-                    You are here
-                  </div>
-                </div>
+                <div
+                  className="absolute w-3 h-3 rounded-full transform -translate-x-1.5 -translate-y-1.5"
+                  style={{
+                    left: `${plotX}px`,
+                    top: `${plotY}px`,
+                    background: '#002c5f',
+                    boxShadow: '0 0 10px rgba(0,44,95,0.5), 0 0 20px rgba(0,44,95,0.25)',
+                  }}
+                />
               </div>
               
               {/* Axis labels */}
@@ -155,7 +156,7 @@ export default function ResultsDisplay({ scores, onReturnHome, onRetakeAssessmen
               <div className="grid grid-cols-2 gap-2">
                 {interpretation.traits.map((trait: string, index: number) => (
                   <div key={index} className="flex items-center">
-                    <div className="w-2 h-2 bg-indigo-600 rounded-full mr-3"></div>
+                    <div className="w-2 h-2 bg-navy-600 rounded-full mr-3"></div>
                     <span className="text-gray-700">{trait}</span>
                   </div>
                 ))}
@@ -167,14 +168,14 @@ export default function ResultsDisplay({ scores, onReturnHome, onRetakeAssessmen
               {onRetakeAssessment && (
                 <button
                   onClick={onRetakeAssessment}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+                  className="w-full bg-[#333333] hover:bg-[#222222] text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
                 >
                   Retake This Assessment
                 </button>
               )}
               <button
                 onClick={onReturnHome}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
+                className="w-full bg-navy-600 hover:bg-navy-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors duration-200"
               >
                 Choose Different Assessment
               </button>

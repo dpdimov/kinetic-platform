@@ -1,3 +1,5 @@
+import PlatformNav from "@kinetic/ui";
+
 export const metadata = {
   title: "KTS Text Analyzer",
   description:
@@ -7,7 +9,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, padding: 0 }}>{children}</body>
+      <body style={{ margin: 0, padding: 0 }}>
+        <PlatformNav currentApp="analyzer" />
+        {children}
+      </body>
     </html>
   );
 }

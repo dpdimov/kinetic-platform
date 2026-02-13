@@ -60,7 +60,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-navy-600 focus:border-transparent"
               placeholder="your@email.com"
               required
               disabled={isLoading}
@@ -77,7 +77,7 @@ export default function LoginModal({ isOpen, onClose, onLogin }: LoginModalProps
             <button
               type="submit"
               disabled={isLoading}
-              className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 bg-navy-600 hover:bg-navy-700 text-white font-semibold py-2 px-4 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isLoading ? 'Signing In...' : 'Sign In'}
             </button>

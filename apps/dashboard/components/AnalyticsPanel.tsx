@@ -62,7 +62,7 @@ export default function AnalyticsPanel({ filters }: AnalyticsPanelProps) {
         }
       });
 
-      const response = await fetch(`/api/analytics?${params}`);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/analytics?${params}`);
       const data = await response.json();
       setAnalytics(data);
     } catch (error) {
@@ -76,7 +76,7 @@ export default function AnalyticsPanel({ filters }: AnalyticsPanelProps) {
     return (
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <div className="flex justify-center items-center py-4">
-          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-navy-600"></div>
           <span className="ml-3 text-gray-600">Loading analytics...</span>
         </div>
       </div>

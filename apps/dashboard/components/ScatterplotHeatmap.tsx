@@ -11,7 +11,7 @@ const DensityMap = dynamic(() => import('./DensityMap'), {
     <div className="bg-white rounded-lg shadow-md p-6 mb-6">
       <div className="flex justify-center py-8">
         <div className="flex items-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mr-3"></div>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-navy-600 mr-3"></div>
           <span className="text-gray-600">Loading visualization...</span>
         </div>
       </div>
@@ -23,7 +23,7 @@ const Chart = dynamic(() => import('./Chart'), {
   ssr: false,
   loading: () => (
     <div className="flex justify-center py-8">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-navy-600"></div>
     </div>
   )
 });
@@ -34,7 +34,7 @@ interface ScatterplotHeatmapProps {
   assessmentId?: string;
 }
 
-export default function ScatterplotHeatmap({ results, backgroundImage = '/images/plot-background.png', assessmentId = 'kinetic-thinking' }: ScatterplotHeatmapProps) {
+export default function ScatterplotHeatmap({ results, backgroundImage = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/plot-background.png`, assessmentId = 'kinetic-thinking' }: ScatterplotHeatmapProps) {
   const [viewMode, setViewMode] = useState<'density' | 'scatter'>('density');
 
   if (results.length === 0) {
@@ -57,7 +57,7 @@ export default function ScatterplotHeatmap({ results, backgroundImage = '/images
             onClick={() => setViewMode('density')}
             className={`px-3 py-1 rounded-md text-sm transition-colors ${
               viewMode === 'density'
-                ? 'bg-blue-600 text-white shadow-sm'
+                ? 'bg-navy-600 text-white shadow-sm'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >
@@ -67,7 +67,7 @@ export default function ScatterplotHeatmap({ results, backgroundImage = '/images
             onClick={() => setViewMode('scatter')}
             className={`px-3 py-1 rounded-md text-sm transition-colors ${
               viewMode === 'scatter'
-                ? 'bg-blue-600 text-white shadow-sm'
+                ? 'bg-navy-600 text-white shadow-sm'
                 : 'text-gray-600 hover:text-gray-800'
             }`}
           >

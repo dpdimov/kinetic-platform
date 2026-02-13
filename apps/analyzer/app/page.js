@@ -57,7 +57,7 @@ function KTSMatrix({ uncertaintyScore, possibilityScore, style }) {
       dim1Score={uncertaintyScore}
       dim2Score={possibilityScore}
       accentColor={color.accent}
-      backgroundSrc="/images/plot-background.png"
+      backgroundSrc={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/plot-background.png`}
       maxSize={400}
     />
   );
@@ -68,19 +68,19 @@ function DimensionBar({ label, leftLabel, rightLabel, score, color }) {
   return (
     <div style={{ marginBottom: 16 }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-        <span style={{ fontSize: 11, color: "#8899bb", fontFamily: "Georgia, serif", fontStyle: "italic" }}>{leftLabel}</span>
-        <span style={{ fontSize: 12, color: "#c0ccdd", fontFamily: "Georgia, serif", fontWeight: 600 }}>{label}</span>
-        <span style={{ fontSize: 11, color: "#8899bb", fontFamily: "Georgia, serif", fontStyle: "italic" }}>{rightLabel}</span>
+        <span style={{ fontSize: 11, color: "#9ca3af", fontFamily: "'Crimson Pro', Georgia, serif", fontStyle: "italic" }}>{leftLabel}</span>
+        <span style={{ fontSize: 12, color: "#374151", fontFamily: "'Crimson Pro', Georgia, serif", fontWeight: 600 }}>{label}</span>
+        <span style={{ fontSize: 11, color: "#9ca3af", fontFamily: "'Crimson Pro', Georgia, serif", fontStyle: "italic" }}>{rightLabel}</span>
       </div>
-      <div style={{ height: 6, background: "rgba(100,140,200,0.1)", borderRadius: 3, position: "relative" }}>
-        <div style={{ position: "absolute", left: "50%", top: 0, width: 1, height: 6, background: "rgba(160,180,220,0.3)" }} />
+      <div style={{ height: 6, background: "#e5e7eb", borderRadius: 3, position: "relative" }}>
+        <div style={{ position: "absolute", left: "50%", top: 0, width: 1, height: 6, background: "#d1d5db" }} />
         <div style={{
           position: "absolute", left: `${pct}%`, top: -3, width: 12, height: 12,
           borderRadius: "50%", background: color, transform: "translateX(-50%)",
           boxShadow: `0 0 12px ${color}40`
         }} />
       </div>
-      <div style={{ textAlign: "center", marginTop: 4, fontSize: 13, color, fontFamily: "Georgia, serif", fontWeight: 600 }}>
+      <div style={{ textAlign: "center", marginTop: 4, fontSize: 13, color, fontFamily: "'Crimson Pro', Georgia, serif", fontWeight: 600 }}>
         {score > 0 ? "+" : ""}{score.toFixed(1)}
       </div>
     </div>
@@ -142,9 +142,9 @@ function FileUpload({ onTextExtracted }) {
         onClick={() => inputRef.current?.click()}
         style={{
           padding: "24px 16px",
-          border: `1.5px dashed ${dragActive ? "rgba(100,180,240,0.5)" : "rgba(100,140,200,0.2)"}`,
+          border: `1.5px dashed ${dragActive ? "#9ca3af" : "#d1d5db"}`,
           borderRadius: 6,
-          background: dragActive ? "rgba(100,180,240,0.05)" : "rgba(15,23,42,0.4)",
+          background: dragActive ? "#f3f4f6" : "#ffffff",
           cursor: "pointer", textAlign: "center", transition: "all 0.2s",
         }}
       >
@@ -153,21 +153,21 @@ function FileUpload({ onTextExtracted }) {
           onChange={(e) => e.target.files?.[0] && processFile(e.target.files[0])}
           style={{ display: "none" }}
         />
-        <div style={{ fontSize: 13, color: "#6a7f99", fontFamily: "Georgia, serif" }}>
+        <div style={{ fontSize: 13, color: "#6b7280", fontFamily: "'Crimson Pro', Georgia, serif" }}>
           {extracting ? (
-            <span style={{ color: "#8899bb" }}>Extracting text…</span>
+            <span style={{ color: "#6b7280" }}>Extracting text…</span>
           ) : fileName ? (
-            <span style={{ color: "#a0bcdd" }}>📄 {fileName}</span>
+            <span style={{ color: "#374151" }}>📄 {fileName}</span>
           ) : (
             <>
-              <span style={{ color: "#8899bb" }}>Drop a file here</span>{" "}or{" "}
-              <span style={{ color: "#a0bcdd", textDecoration: "underline" }}>browse</span>
-              <div style={{ fontSize: 11, color: "#4a5f7f", marginTop: 6 }}>PDF · DOCX · TXT</div>
+              <span style={{ color: "#6b7280" }}>Drop a file here</span>{" "}or{" "}
+              <span style={{ color: "#374151", textDecoration: "underline" }}>browse</span>
+              <div style={{ fontSize: 11, color: "#9ca3af", marginTop: 6 }}>PDF · DOCX · TXT</div>
             </>
           )}
         </div>
       </div>
-      {fileError && <div style={{ marginTop: 8, fontSize: 12, color: "#e08080" }}>{fileError}</div>}
+      {fileError && <div style={{ marginTop: 8, fontSize: 12, color: "#dc2626" }}>{fileError}</div>}
     </div>
   );
 }
@@ -207,7 +207,7 @@ export default function Home() {
       }
 
       // Call our own API route (not Anthropic directly)
-      const response = await fetch("/api/analyze", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/analyze`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -261,29 +261,24 @@ export default function Home() {
 
   return (
     <div style={{
-      minHeight: "100vh", background: "#0a0f1e", color: "#c8d6e8",
-      fontFamily: "'Georgia', 'Times New Roman', serif", padding: "24px 16px",
+      minHeight: "100vh", background: "#fafafa", color: "#1f2937",
+      fontFamily: "'Crimson Pro', Georgia, serif", padding: "24px 16px",
     }}>
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
         {/* Header */}
         <div style={{ marginBottom: 28 }}>
-          <div style={{
-            fontSize: 10, letterSpacing: 4, color: "#5a6f8f",
-            textTransform: "uppercase", marginBottom: 8, fontFamily: "system-ui, sans-serif"
-          }}>
-            Prototype · Dimov &amp; Pistrui
-          </div>
+          <div style={{ marginBottom: 8 }} />
           <h1 style={{
-            fontSize: 28, fontWeight: 400, color: "#e2ecf5", lineHeight: 1.2, margin: 0,
-            borderBottom: "1px solid rgba(100,140,200,0.2)", paddingBottom: 16
+            fontSize: 28, fontWeight: 400, color: "#111827", lineHeight: 1.2, margin: 0,
+            borderBottom: "1px solid #e5e7eb", paddingBottom: 16
           }}>
-            Kinetic Thinking Styles<br />
-            <span style={{ fontSize: 18, color: "#7a8faa", fontStyle: "italic" }}>Text Analyzer</span>
+            Kinetic Thinking Styles in Practice<br />
+            <span style={{ fontSize: 18, color: "#6b7280", fontStyle: "italic" }}>Text Analyzer</span>
           </h1>
           <p style={{
-            fontSize: 13, color: "#6a7f99", marginTop: 12, lineHeight: 1.6, maxWidth: 620
+            fontSize: 13, color: "#6b7280", marginTop: 12, lineHeight: 1.6, maxWidth: 620
           }}>
-            Maps written text onto the KTS framework by analysing linguistic markers
+            Maps written text onto the Kinetic Thinking Styles framework by analysing linguistic markers
             of attitudes towards uncertainty (reason ↔ play) and possibility (structure ↔ openness).
           </p>
         </div>
@@ -295,12 +290,12 @@ export default function Home() {
               key={tab.key}
               onClick={() => { setInputMode(tab.key); setResult(null); }}
               style={{
-                padding: "8px 20px", fontSize: 12, fontFamily: "system-ui, sans-serif",
+                padding: "8px 20px", fontSize: 12, fontFamily: "Inter, system-ui, sans-serif",
                 letterSpacing: 1, textTransform: "uppercase",
-                background: inputMode === tab.key ? "rgba(100,140,200,0.12)" : "transparent",
-                border: "1px solid rgba(100,140,200,0.15)",
-                borderBottom: inputMode === tab.key ? "1px solid #0a0f1e" : "1px solid rgba(100,140,200,0.15)",
-                color: inputMode === tab.key ? "#a0bcdd" : "#5a6f8f",
+                background: inputMode === tab.key ? "#ffffff" : "transparent",
+                border: "1px solid #e5e7eb",
+                borderBottom: inputMode === tab.key ? "1px solid #ffffff" : "1px solid #e5e7eb",
+                color: inputMode === tab.key ? "#111827" : "#9ca3af",
                 cursor: "pointer",
               }}
             >
@@ -313,18 +308,18 @@ export default function Home() {
         {inputMode === "text" && (
           <div style={{ marginBottom: 12 }}>
             <div style={{
-              fontSize: 10, color: "#4a5f7f", marginBottom: 6,
-              textTransform: "uppercase", letterSpacing: 2, fontFamily: "system-ui, sans-serif"
+              fontSize: 10, color: "#9ca3af", marginBottom: 6,
+              textTransform: "uppercase", letterSpacing: 2, fontFamily: "Inter, system-ui, sans-serif"
             }}>
               Sample texts
             </div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
               {Object.keys(SAMPLE_TEXTS).map((key) => (
                 <button key={key} onClick={() => handleSampleSelect(key)} style={{
-                  padding: "5px 12px", fontSize: 11, fontFamily: "Georgia, serif",
-                  background: selectedSample === key ? "rgba(100,140,200,0.15)" : "rgba(100,140,200,0.05)",
-                  border: `1px solid ${selectedSample === key ? "rgba(100,140,200,0.4)" : "rgba(100,140,200,0.1)"}`,
-                  borderRadius: 3, color: selectedSample === key ? "#a0bcdd" : "#6a7f99", cursor: "pointer",
+                  padding: "5px 12px", fontSize: 11, fontFamily: "'Crimson Pro', Georgia, serif",
+                  background: selectedSample === key ? "#f3f4f6" : "#ffffff",
+                  border: `1px solid ${selectedSample === key ? "#d1d5db" : "#e5e7eb"}`,
+                  borderRadius: 3, color: selectedSample === key ? "#111827" : "#6b7280", cursor: "pointer",
                 }}>
                   {key}
                 </button>
@@ -341,9 +336,9 @@ export default function Home() {
             placeholder="Paste or type text to analyse..."
             style={{
               width: "100%", minHeight: 140, padding: 14, fontSize: 14, lineHeight: 1.7,
-              fontFamily: "Georgia, serif", background: "rgba(15,23,42,0.8)",
-              border: "1px solid rgba(100,140,200,0.15)", borderRadius: 6,
-              color: "#c8d6e8", resize: "vertical", outline: "none", boxSizing: "border-box",
+              fontFamily: "'Crimson Pro', Georgia, serif", background: "#ffffff",
+              border: "1px solid #e5e7eb", borderRadius: 6,
+              color: "#1f2937", resize: "vertical", outline: "none", boxSizing: "border-box",
             }}
           />
         ) : (
@@ -351,7 +346,7 @@ export default function Home() {
         )}
 
         {sourceLabel && inputMode === "file" && (
-          <div style={{ marginTop: 8, fontSize: 12, color: "#6a7f99", fontStyle: "italic" }}>
+          <div style={{ marginTop: 8, fontSize: 12, color: "#6b7280", fontStyle: "italic" }}>
             Source: {sourceLabel}
           </div>
         )}
@@ -361,10 +356,10 @@ export default function Home() {
           disabled={loading || !canAnalyze}
           style={{
             marginTop: 12, padding: "10px 28px", fontSize: 13,
-            fontFamily: "Georgia, serif", fontWeight: 600, letterSpacing: 1,
-            background: loading ? "rgba(100,140,200,0.1)" : "rgba(100,140,200,0.15)",
-            border: "1px solid rgba(100,140,200,0.3)", borderRadius: 4,
-            color: loading || !canAnalyze ? "#5a6f8f" : "#a0bcdd",
+            fontFamily: "'Crimson Pro', Georgia, serif", fontWeight: 600, letterSpacing: 1,
+            background: loading || !canAnalyze ? "#e5e7eb" : "#002c5f",
+            border: `1px solid ${loading || !canAnalyze ? "#d1d5db" : "#002c5f"}`, borderRadius: 4,
+            color: loading || !canAnalyze ? "#9ca3af" : "#ffffff",
             cursor: loading || !canAnalyze ? "default" : "pointer",
           }}
         >
@@ -374,8 +369,8 @@ export default function Home() {
         {error && (
           <div style={{
             marginTop: 16, padding: 12,
-            background: "rgba(200,80,80,0.1)", border: "1px solid rgba(200,80,80,0.2)",
-            borderRadius: 4, fontSize: 13, color: "#e08080"
+            background: "#fef2f2", border: "1px solid #fecaca",
+            borderRadius: 4, fontSize: 13, color: "#dc2626"
           }}>
             {error}
           </div>
@@ -392,8 +387,8 @@ export default function Home() {
               borderRadius: 4, marginBottom: 20,
             }}>
               <span style={{
-                fontSize: 11, color: "#6a7f99", textTransform: "uppercase",
-                letterSpacing: 2, fontFamily: "system-ui, sans-serif"
+                fontSize: 11, color: "#9ca3af", textTransform: "uppercase",
+                letterSpacing: 2, fontFamily: "Inter, system-ui, sans-serif"
               }}>
                 Detected style:{" "}
               </span>
@@ -415,14 +410,14 @@ export default function Home() {
                   label="Attitude towards uncertainty" leftLabel="Reason"
                   rightLabel="Play" score={result.uncertainty_score} color="#c4798a"
                 />
-                <div style={{ fontSize: 13, color: "#8899bb", lineHeight: 1.6, marginBottom: 20 }}>
+                <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6, marginBottom: 20 }}>
                   {result.uncertainty_reasoning}
                 </div>
                 <DimensionBar
                   label="Attitude towards possibility" leftLabel="Structure"
                   rightLabel="Openness" score={result.possibility_score} color="#7ab5a0"
                 />
-                <div style={{ fontSize: 13, color: "#8899bb", lineHeight: 1.6, marginBottom: 20 }}>
+                <div style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6, marginBottom: 20 }}>
                   {result.possibility_reasoning}
                 </div>
               </div>
@@ -430,12 +425,12 @@ export default function Home() {
 
             <div style={{
               marginTop: 24, padding: 16,
-              background: "rgba(15,23,42,0.6)", border: "1px solid rgba(100,140,200,0.1)",
+              background: "#ffffff", border: "1px solid #e5e7eb",
               borderRadius: 6,
             }}>
               <div style={{
-                fontSize: 11, color: "#5a6f8f", textTransform: "uppercase",
-                letterSpacing: 2, marginBottom: 10, fontFamily: "system-ui, sans-serif"
+                fontSize: 11, color: "#9ca3af", textTransform: "uppercase",
+                letterSpacing: 2, marginBottom: 10, fontFamily: "Inter, system-ui, sans-serif"
               }}>
                 Key linguistic indicators
               </div>
@@ -443,9 +438,9 @@ export default function Home() {
                 {result.key_indicators?.map((ind, i) => (
                   <span key={i} style={{
                     padding: "4px 12px", fontSize: 12, fontStyle: "italic",
-                    background: "rgba(100,140,200,0.08)",
-                    border: "1px solid rgba(100,140,200,0.12)",
-                    borderRadius: 3, color: "#8899bb",
+                    background: "#f9fafb",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: 3, color: "#6b7280",
                   }}>
                     &ldquo;{ind}&rdquo;
                   </span>
@@ -459,7 +454,7 @@ export default function Home() {
               background: `${colors.accent}08`,
               borderRadius: "0 6px 6px 0",
             }}>
-              <div style={{ fontSize: 14, color: "#a0b4cc", lineHeight: 1.7, fontStyle: "italic" }}>
+              <div style={{ fontSize: 14, color: "#374151", lineHeight: 1.7, fontStyle: "italic" }}>
                 {result.summary}
               </div>
             </div>

@@ -1,9 +1,8 @@
 import PlatformNav from "@kinetic/ui";
 
 export const metadata = {
-  title: "Kinetic Thinking Framework — Style Explorer",
-  description:
-    "A guided conversation to explore your thinking, managing, and leading styles through the Kinetic Thinking Framework.",
+  title: "Kinetic Platform",
+  description: "Kinetic Thinking Styles — Platform Hub",
 };
 
 export default function RootLayout({ children }) {
@@ -16,7 +15,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body style={{ margin: 0, padding: 0 }}>
-        <PlatformNav currentApp="coach" />
+        <PlatformNav currentApp="hub" />
         {children}
       </body>
     </html>

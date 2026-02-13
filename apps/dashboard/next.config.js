@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
+const basePath = '/dashboard';
 const nextConfig = {
-  transpilePackages: ['@kinetic/database'],
+  basePath,
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
+  transpilePackages: ['@kinetic/database', '@kinetic/ui'],
   typescript: {
     ignoreBuildErrors: false,
   },

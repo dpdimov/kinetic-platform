@@ -23,5 +23,5 @@ export function logout(): void {
   
   localStorage.removeItem('admin_authenticated');
   // Also clear the cookie by making a request
-  fetch('/api/admin/logout', { method: 'POST' });
+  fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/admin/logout`, { method: 'POST' });
 }

@@ -31,9 +31,9 @@ export default function AssessmentSelection({ onAssessmentSelected }: Assessment
 
   if (loading || !registry) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#fafafa] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-300 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading assessments...</p>
         </div>
       </div>
@@ -41,9 +41,15 @@ export default function AssessmentSelection({ onAssessmentSelected }: Assessment
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-blue-50 py-12">
+    <div className="min-h-screen bg-[#fafafa] py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
+          <img
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/kinetic-logo.png`}
+            alt="Kinetic Thinking Styles"
+            className="mx-auto mb-6"
+            style={{ height: 64, width: 'auto' }}
+          />
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Choose Your Assessment
           </h1>
@@ -60,8 +66,8 @@ export default function AssessmentSelection({ onAssessmentSelected }: Assessment
                 key={assessment.id}
                 className={`bg-white rounded-xl shadow-lg p-6 border-2 transition-all duration-200 cursor-pointer ${
                   selectedAssessment === assessment.id
-                    ? 'border-indigo-500 ring-2 ring-indigo-200'
-                    : 'border-gray-200 hover:border-indigo-300'
+                    ? 'border-navy-600 ring-2 ring-navy-600/20'
+                    : 'border-gray-200 hover:border-navy-600/40'
                 }`}
                 onClick={() => setSelectedAssessment(assessment.id)}
               >
@@ -75,7 +81,7 @@ export default function AssessmentSelection({ onAssessmentSelected }: Assessment
                         value={assessment.id}
                         checked={selectedAssessment === assessment.id}
                         onChange={(e) => setSelectedAssessment(e.target.value)}
-                        className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                        className="h-4 w-4 text-navy-600 focus:ring-navy-600 border-gray-300"
                       />
                       <h3 className="ml-3 text-xl font-semibold text-gray-900">
                         {assessment.name}
@@ -115,7 +121,7 @@ export default function AssessmentSelection({ onAssessmentSelected }: Assessment
           <button
             onClick={handleContinue}
             disabled={!selectedAssessment}
-            className="bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-lg transition duration-200 transform hover:scale-105 disabled:transform-none"
+            className="bg-navy-600 hover:bg-navy-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-semibold py-3 px-8 rounded-lg transition duration-200 transform hover:scale-105 disabled:transform-none"
           >
             Continue to Assessment
           </button>

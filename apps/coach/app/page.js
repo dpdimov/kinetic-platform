@@ -146,21 +146,22 @@ function StyleMatrix({ data }) {
   const fw = data.framework;
   const colors = FRAMEWORK_COLORS[fw] || FRAMEWORK_COLORS.thinking;
   const accent = colors[data.style] || colors.default;
-  const bgSrc = FRAMEWORK_BACKGROUNDS[fw] || FRAMEWORK_BACKGROUNDS.thinking;
+  const bgSrc = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}${FRAMEWORK_BACKGROUNDS[fw] || FRAMEWORK_BACKGROUNDS.thinking}`;
 
   return (
     <div style={{
-      background: "#111827",
-      border: "1px solid rgba(100,140,200,0.12)",
+      background: "#ffffff",
+      border: "1px solid #e5e7eb",
       borderRadius: 8,
       padding: 16,
       marginTop: 12,
       marginBottom: 8,
+      boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
     }}>
       <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
         <div style={{
           fontSize: 10, letterSpacing: 2, textTransform: "uppercase",
-          color: "rgba(160,180,220,0.5)", fontFamily: "Inter, system-ui, sans-serif",
+          color: "#9ca3af", fontFamily: "Inter, system-ui, sans-serif",
         }}>
           {FRAMEWORK_LABELS[fw] || fw}
         </div>
@@ -186,7 +187,7 @@ function StyleMatrix({ data }) {
           <DimScore label={data.dim2_label} left={data.dim2_left} right={data.dim2_right} score={data.dim2_score} color={accent} />
           {data.summary && (
             <div style={{
-              marginTop: 10, fontSize: 13, color: "rgba(180,195,220,0.7)",
+              marginTop: 10, fontSize: 13, color: "#6b7280",
               fontStyle: "italic", lineHeight: 1.5,
               fontFamily: "'Crimson Pro', Georgia, serif",
             }}>
@@ -204,18 +205,18 @@ function DimScore({ label, left, right, score, color }) {
   return (
     <div style={{ marginBottom: 12 }}>
       <div style={{
-        fontSize: 10, color: "rgba(160,180,220,0.5)", letterSpacing: 1,
+        fontSize: 10, color: "#9ca3af", letterSpacing: 1,
         textTransform: "uppercase", marginBottom: 3,
         fontFamily: "Inter, system-ui, sans-serif",
       }}>
         {label}
       </div>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 2 }}>
-        <span style={{ fontSize: 10, color: "rgba(160,180,220,0.4)", fontFamily: "Inter, system-ui, sans-serif" }}>{left}</span>
-        <span style={{ fontSize: 10, color: "rgba(160,180,220,0.4)", fontFamily: "Inter, system-ui, sans-serif" }}>{right}</span>
+        <span style={{ fontSize: 10, color: "#9ca3af", fontFamily: "Inter, system-ui, sans-serif" }}>{left}</span>
+        <span style={{ fontSize: 10, color: "#9ca3af", fontFamily: "Inter, system-ui, sans-serif" }}>{right}</span>
       </div>
-      <div style={{ height: 4, background: "rgba(100,140,200,0.08)", borderRadius: 2, position: "relative" }}>
-        <div style={{ position: "absolute", left: "50%", top: 0, width: 1, height: 4, background: "rgba(160,180,220,0.2)" }} />
+      <div style={{ height: 4, background: "#e5e7eb", borderRadius: 2, position: "relative" }}>
+        <div style={{ position: "absolute", left: "50%", top: 0, width: 1, height: 4, background: "#d1d5db" }} />
         <div style={{
           position: "absolute", left: `${pct}%`, top: -3, width: 10, height: 10,
           borderRadius: "50%", background: color, transform: "translateX(-50%)",
@@ -246,11 +247,11 @@ function ChatMessage({ role, text, styleResults }) {
       }}>
         {isUser ? (
           <div style={{
-            background: "rgba(100,140,200,0.1)",
-            border: "1px solid rgba(100,140,200,0.15)",
+            background: "#f3f4f6",
+            border: "1px solid #e5e7eb",
             borderRadius: "16px 16px 4px 16px",
             padding: "10px 16px",
-            fontSize: 14, lineHeight: 1.65, color: "#c0ccdd",
+            fontSize: 14, lineHeight: 1.65, color: "#374151",
             fontFamily: "'Crimson Pro', Georgia, serif",
           }}>
             {text}
@@ -258,7 +259,7 @@ function ChatMessage({ role, text, styleResults }) {
         ) : (
           <div>
             <div style={{
-              fontSize: 14.5, lineHeight: 1.7, color: "#b8c8dc",
+              fontSize: 14.5, lineHeight: 1.7, color: "#374151",
               fontFamily: "'Crimson Pro', Georgia, serif",
               whiteSpace: "pre-wrap",
             }}>
@@ -284,7 +285,7 @@ function TypingIndicator() {
       {[0, 1, 2].map((i) => (
         <div key={i} style={{
           width: 6, height: 6, borderRadius: "50%",
-          background: "rgba(160,180,220,0.3)",
+          background: "#d1d5db",
           animation: `typingDot 1.2s ease infinite ${i * 0.2}s`,
         }} />
       ))}
@@ -302,13 +303,13 @@ function AssessedStyles({ styles }) {
   return (
     <div style={{
       padding: "12px 16px",
-      background: "rgba(15,20,35,0.5)",
-      borderBottom: "1px solid rgba(100,140,200,0.08)",
+      background: "#f9fafb",
+      borderBottom: "1px solid #e5e7eb",
       display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center",
     }}>
       <span style={{
         fontSize: 10, letterSpacing: 2, textTransform: "uppercase",
-        color: "rgba(160,180,220,0.4)", fontFamily: "Inter, system-ui, sans-serif",
+        color: "#9ca3af", fontFamily: "Inter, system-ui, sans-serif",
       }}>
         Assessed
       </span>
@@ -367,7 +368,7 @@ export default function Home() {
         content: m.content || m.text,
       }));
 
-      const response = await fetch("/api/chat", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -423,7 +424,7 @@ export default function Home() {
     // Send an initial greeting trigger
     setTimeout(() => {
       setLoading(true);
-      fetch("/api/chat", {
+      fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -454,86 +455,70 @@ export default function Home() {
   if (!started) {
     return (
       <div style={{
-        minHeight: "100vh", background: "#080c18",
+        minHeight: "calc(100vh - 44px)", background: "#fafafa",
         display: "flex", alignItems: "center", justifyContent: "center",
         fontFamily: "'Crimson Pro', Georgia, serif",
         padding: 24,
       }}>
         <div style={{ maxWidth: 520, textAlign: "center" }}>
           <img
-            src="/images/kinetic-logo.png"
-            alt="Kinetic Thinking Framework"
-            style={{ width: 80, height: "auto", marginBottom: 20, opacity: 0.9 }}
+            src={`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/kinetic-logo.png`}
+            alt="Kinetic Thinking Styles"
+            style={{ width: 80, height: "auto", marginBottom: 24 }}
           />
-          <div style={{
-            fontSize: 10, letterSpacing: 4, color: "#3a4a6a",
-            textTransform: "uppercase", marginBottom: 16,
-            fontFamily: "Inter, system-ui, sans-serif",
-          }}>
-            Kinetic Thinking Framework
-          </div>
           <h1 style={{
-            fontSize: 32, fontWeight: 300, color: "#d0daea",
+            fontSize: 32, fontWeight: 300, color: "#111827",
             lineHeight: 1.3, margin: "0 0 12px 0",
           }}>
             Style Explorer
           </h1>
           <p style={{
-            fontSize: 16, color: "#6a7f99", lineHeight: 1.7,
+            fontSize: 16, color: "#6b7280", lineHeight: 1.7,
             marginBottom: 32, fontStyle: "italic",
           }}>
             A guided conversation to explore how you think, manage, and lead —
-            through the lens of the Kinetic Thinking Framework.
+            through the lens of the Kinetic Styles Framework.
           </p>
-          <div style={{
-            display: "flex", gap: 24, justifyContent: "center",
-            marginBottom: 36, flexWrap: "wrap",
-          }}>
+          <div style={{ position: "relative", width: 320, height: 200, margin: "0 auto 36px" }}>
             {[
-              { label: "Thinking", desc: "Uncertainty × Possibility", color: "#009ddb" },
-              { label: "Managing", desc: "Process × Performance", color: "#9f60b5" },
-              { label: "Leading", desc: "Ecosystem × Time", color: "#ff6f20" },
+              { label: "Thinking", desc: "Uncertainty × Possibility", color: "#009ddb", top: 0, left: "50%", tx: "-50%" },
+              { label: "Managing", desc: "Process × Performance", color: "#9f60b5", top: "auto", bottom: 0, left: 0, tx: "0" },
+              { label: "Leading", desc: "Ecosystem × Time", color: "#ff6f20", top: "auto", bottom: 0, right: 0, left: "auto", tx: "0" },
             ].map((f) => (
               <div key={f.label} style={{
+                position: "absolute",
+                top: f.top, bottom: f.bottom, left: f.left, right: f.right,
+                transform: f.tx ? `translateX(${f.tx})` : undefined,
                 padding: "12px 16px", borderRadius: 6,
-                background: f.color + "08", border: `1px solid ${f.color}20`,
-                minWidth: 130,
+                background: "transparent", border: "none",
+                minWidth: 130, textAlign: "center",
               }}>
                 <div style={{ fontSize: 14, color: f.color, fontWeight: 500, marginBottom: 2 }}>
                   {f.label}
                 </div>
-                <div style={{ fontSize: 11, color: "#5a6f8f" }}>{f.desc}</div>
+                <div style={{ fontSize: 11, color: "#6b7280" }}>{f.desc}</div>
               </div>
             ))}
+            {/* Triangle connecting lines */}
+            <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
+              <line x1="160" y1="48" x2="65" y2="150" stroke="#e5e7eb" strokeWidth="1" />
+              <line x1="160" y1="48" x2="255" y2="150" stroke="#e5e7eb" strokeWidth="1" />
+              <line x1="65" y1="150" x2="255" y2="150" stroke="#e5e7eb" strokeWidth="1" />
+            </svg>
           </div>
           <button
             onClick={startSession}
             style={{
               padding: "12px 36px", fontSize: 15, fontWeight: 400,
               fontFamily: "'Crimson Pro', Georgia, serif",
-              background: "rgba(100,140,200,0.12)",
-              border: "1px solid rgba(100,140,200,0.25)",
-              borderRadius: 6, color: "#a0bcdd", cursor: "pointer",
+              background: "#002c5f",
+              border: "1px solid #002c5f",
+              borderRadius: 6, color: "#ffffff", cursor: "pointer",
               letterSpacing: 0.5, transition: "all 0.2s",
             }}
           >
             Begin Reflection
           </button>
-          <div style={{
-            marginTop: 48, fontSize: 11, color: "#3a4a6a", lineHeight: 1.6,
-            fontFamily: "Inter, system-ui, sans-serif",
-          }}>
-            Based on: Dimov, D. and Pistrui, J. (2023).{" "}
-            <a
-              href="https://doi.org/10.1016/j.jbvd.2023.100015"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: "#4a6a8a", textDecoration: "underline" }}
-            >
-              Kinetic thinking styles: A tool for developing entrepreneurial thinking
-            </a>.{" "}
-            <em>Journal of Business Venturing Design</em>, 2, 100015.
-          </div>
         </div>
       </div>
     );
@@ -542,43 +527,37 @@ export default function Home() {
   // ─── Chat interface ───
   return (
     <div style={{
-      height: "100vh", background: "#080c18",
+      height: "calc(100vh - 44px)", background: "#fafafa",
       display: "flex", flexDirection: "column",
       fontFamily: "'Crimson Pro', Georgia, serif",
     }}>
       <style>{`
         @keyframes msgFade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes typingDot { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 0.8; transform: translateY(-3px); } }
-        textarea::placeholder { color: rgba(120,140,170,0.4); }
-        textarea:focus { outline: none; border-color: rgba(100,140,200,0.3) !important; }
+        textarea::placeholder { color: #9ca3af; }
+        textarea:focus { outline: none; border-color: #d1d5db !important; }
       `}</style>
 
       {/* Header */}
       <div style={{
         padding: "12px 20px",
-        borderBottom: "1px solid rgba(100,140,200,0.08)",
+        borderBottom: "1px solid #e5e7eb",
         display: "flex", alignItems: "center", justifyContent: "space-between",
-        background: "rgba(10,14,28,0.9)",
+        background: "rgba(255,255,255,0.92)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
       }}>
-        <div>
-          <div style={{
-            fontSize: 10, letterSpacing: 3, textTransform: "uppercase",
-            color: "#3a4a6a", fontFamily: "Inter, system-ui, sans-serif",
-          }}>
-            Kinetic Thinking Framework
-          </div>
-          <div style={{ fontSize: 17, color: "#c0ccdd", fontWeight: 400 }}>
-            Style Explorer
-          </div>
+        <div style={{ fontSize: 17, color: "#111827", fontWeight: 400 }}>
+          Style Explorer
         </div>
         <button
           onClick={() => { setStarted(false); setMessages([]); setAssessedStyles([]); }}
           style={{
             padding: "5px 14px", fontSize: 11,
             fontFamily: "Inter, system-ui, sans-serif",
-            background: "rgba(100,140,200,0.06)",
-            border: "1px solid rgba(100,140,200,0.12)",
-            borderRadius: 3, color: "#5a6f8f", cursor: "pointer",
+            background: "#f3f4f6",
+            border: "1px solid #e5e7eb",
+            borderRadius: 3, color: "#6b7280", cursor: "pointer",
           }}
         >
           New session
@@ -609,8 +588,10 @@ export default function Home() {
       {/* Input */}
       <div style={{
         padding: "12px 20px 16px",
-        borderTop: "1px solid rgba(100,140,200,0.08)",
-        background: "rgba(10,14,28,0.9)",
+        borderTop: "1px solid #e5e7eb",
+        background: "rgba(255,255,255,0.92)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
       }}>
         <div style={{
           maxWidth: 720, margin: "0 auto",
@@ -626,9 +607,9 @@ export default function Home() {
             style={{
               flex: 1, padding: "10px 14px", fontSize: 14, lineHeight: 1.6,
               fontFamily: "'Crimson Pro', Georgia, serif",
-              background: "rgba(15,23,42,0.6)",
-              border: "1px solid rgba(100,140,200,0.12)",
-              borderRadius: 8, color: "#c8d6e8",
+              background: "#ffffff",
+              border: "1px solid #e5e7eb",
+              borderRadius: 8, color: "#1f2937",
               resize: "none", minHeight: 42, maxHeight: 120,
               boxSizing: "border-box",
             }}
@@ -640,10 +621,10 @@ export default function Home() {
               padding: "10px 18px", fontSize: 13,
               fontFamily: "Inter, system-ui, sans-serif",
               fontWeight: 500,
-              background: loading || !input.trim() ? "rgba(100,140,200,0.06)" : "rgba(100,140,200,0.15)",
-              border: "1px solid rgba(100,140,200,0.2)",
+              background: loading || !input.trim() ? "#f3f4f6" : "#ffffff",
+              border: "1px solid #d1d5db",
               borderRadius: 8,
-              color: loading || !input.trim() ? "#3a4a6a" : "#a0bcdd",
+              color: loading || !input.trim() ? "#9ca3af" : "#374151",
               cursor: loading || !input.trim() ? "default" : "pointer",
               whiteSpace: "nowrap",
             }}

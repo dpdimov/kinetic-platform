@@ -1,0 +1,9 @@
+{
+  "name": "@kinetic/ui",
+  "version": "0.1.0",
+  "private": true,
+  "main": "./PlatformNav.js",
+  "exports": {
+    ".": "./PlatformNav.js"
+  }
+}

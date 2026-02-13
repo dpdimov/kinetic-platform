@@ -35,7 +35,7 @@ export default function FilterPanel({ onFiltersChange }: FilterPanelProps) {
 
   const fetchFilterOptions = async () => {
     try {
-      const response = await fetch('/api/filters');
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ''}/api/filters`);
       const data = await response.json();
       console.log('Admin filter options received:', data); // Debug log
       console.log('Custom codes count:', data.customCodes ? data.customCodes.length : 'undefined');
@@ -70,13 +70,13 @@ export default function FilterPanel({ onFiltersChange }: FilterPanelProps) {
         <div className="flex space-x-3">
           <button
             onClick={fetchFilterOptions}
-            className="text-blue-600 hover:text-blue-800 text-sm"
+            className="text-navy-600 hover:text-navy-700 text-sm"
           >
             Refresh Filters
           </button>
           <button
             onClick={clearFilters}
-            className="text-blue-600 hover:text-blue-800 text-sm"
+            className="text-navy-600 hover:text-navy-700 text-sm"
           >
             Clear All
           </button>

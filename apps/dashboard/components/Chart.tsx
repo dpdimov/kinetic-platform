@@ -37,7 +37,7 @@ interface DataPoint {
   count: number;
 }
 
-export default function Chart({ results, backgroundImage = '/images/plot-background.png' }: ChartProps) {
+export default function Chart({ results, backgroundImage = `${process.env.NEXT_PUBLIC_BASE_PATH || ''}/images/plot-background.png` }: ChartProps) {
   const [processedData, setProcessedData] = useState<DataPoint[]>([]);
   const [backgroundImg, setBackgroundImg] = useState<HTMLImageElement | null>(null);
   const [chartKey, setChartKey] = useState(0); // Force chart re-render
