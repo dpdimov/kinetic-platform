@@ -61,7 +61,7 @@ export default function PlatformNav({ currentApp }) {
         </a>
 
         {/* Nav links */}
-        <div style={{ display: "flex", gap: 2, alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 2, alignItems: "center", overflow: "hidden" }}>
           {APPS.slice(1).map((app) => {
             const isActive = currentApp === app.key;
             return (
@@ -70,10 +70,9 @@ export default function PlatformNav({ currentApp }) {
                 href={getHref(app)}
                 style={{
                   fontSize: 15,
-                  fontWeight: isActive ? 600 : 400,
                   color: isActive ? "#1f2937" : "#6b7280",
                   textDecoration: "none",
-                  padding: "6px 12px",
+                  padding: "6px 10px",
                   borderRadius: 4,
                   background: isActive ? "#f3f4f6" : "transparent",
                   transition: "all 0.15s ease",
