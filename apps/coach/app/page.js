@@ -1,10 +1,44 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
+import {
+  FRAMEWORKS,
+  CROSS_FRAMEWORK_TENSIONS,
+  allFrameworksSummaryForPrompt,
+  styleResultTemplate,
+  getFrameworkKeys,
+} from "@kinetic/frameworks";
 
 // ─────────────────────────────────────────────────
-// SYSTEM PROMPT
+// DERIVE CONSTANTS FROM SHARED PACKAGE
 // ─────────────────────────────────────────────────
+
+const FRAMEWORK_COLORS = Object.fromEntries(
+  getFrameworkKeys().map((k) => [k, FRAMEWORKS[k].colors])
+);
+
+const FRAMEWORK_BACKGROUNDS = Object.fromEntries(
+  getFrameworkKeys().map((k) => [k, FRAMEWORKS[k].backgroundImage])
+);
+
+const FRAMEWORK_LABELS = Object.fromEntries(
+  getFrameworkKeys().map((k) => [k, FRAMEWORKS[k].name])
+);
+
+// ─────────────────────────────────────────────────
+// SYSTEM PROMPT (framework definitions from shared package)
+// ─────────────────────────────────────────────────
+
+const styleResultTemplates = getFrameworkKeys()
+  .map((k) => {
+    const t = styleResultTemplate(k);
+    return `For ${k}: framework="${t.framework}", dim1_label="${t.dim1_label}", dim1_left="${t.dim1_left}", dim1_right="${t.dim1_right}", dim2_label="${t.dim2_label}", dim2_left="${t.dim2_left}", dim2_right="${t.dim2_right}", styles: ${t.styles}`;
+  })
+  .join("\n\n");
+
+const crossTensions = CROSS_FRAMEWORK_TENSIONS.map(
+  (t) => `• ${t.label}: ${t.description}`
+).join("\n");
 
 const SYSTEM_PROMPT = `You are a reflective coach helping people explore their thinking, managing, and leading styles through the Kinetic framework (Dimov & Pistrui, 2023). You guide users through self-discovery via structured assessments and metacognitive reflection.
 
@@ -16,17 +50,7 @@ THE THREE FRAMEWORKS form a conceptual cube:
 • Uncertainty (thinking) ↔ Process (managing)
 • Performance (managing) ↔ Ecosystem (leading)
 
-KINETIC THINKING STYLES
-Axes: Uncertainty (Reason ↔ Play) × Possibility (Structure ↔ Openness)
-Styles: Focused (reason+structure), Playful (play+structure), Incremental (reason+openness), Breakaway (play+openness)
-
-KINETIC MANAGING STYLES
-Axes: Process (Control ↔ Enable) × Performance (Productivity ↔ Learning)
-Styles: Efficient (control+productivity), Supportive (enable+productivity), Inquisitive (control+learning), Venturing (enable+learning)
-
-KINETIC LEADING STYLES
-Axes: Ecosystem (Transact ↔ Collaborate) × Time (Present ↔ Future)
-Styles: Troubleshooter (transact+present), Co-creator (collaborate+present), Challenger (transact+future), Transformer (collaborate+future)
+${allFrameworksSummaryForPrompt()}
 
 FLOW:
 1. Welcome the user warmly. Ask them to describe the context or challenge they are reflecting on. Infer from their framing whether the challenge concerns self (thinking), team (managing), or organisation (leading). You may ask a brief clarifying question if needed.
@@ -74,16 +98,10 @@ When you complete an assessment and determine a style, you MUST include exactly 
 
 Replace the values with the actual scores and style. The marker must be valid JSON inside the comment tags. Use these exact framework/label values:
 
-For thinking: framework="thinking", dim1_label="Uncertainty", dim1_left="Reason", dim1_right="Play", dim2_label="Possibility", dim2_left="Structure", dim2_right="Openness", styles: Focused/Playful/Incremental/Breakaway
-
-For managing: framework="managing", dim1_label="Process", dim1_left="Control", dim1_right="Enable", dim2_label="Performance", dim2_left="Productivity", dim2_right="Learning", styles: Efficient/Supportive/Inquisitive/Venturing
-
-For leading: framework="leading", dim1_label="Ecosystem", dim1_left="Transact", dim1_right="Collaborate", dim2_label="Time", dim2_left="Present", dim2_right="Future", styles: Troubleshooter/Co-creator/Challenger/Transformer
+${styleResultTemplates}
 
 CROSS-STYLE TENSIONS (explore when multiple styles are known):
-• Uncertainty (thinking) ↔ Process (managing): e.g. a Breakaway thinker who manages as Efficient may experience tension between personal exploratory instincts and controlling team processes.
-• Possibility (thinking) ↔ Time (leading): e.g. an established-possibility thinker who leads with future orientation may struggle to see long-term possibilities they're pushing others toward.
-• Performance (managing) ↔ Ecosystem (leading): e.g. a productivity-focused manager who collaborates externally may find tensions between internal efficiency demands and partnership flexibility.
+${crossTensions}
 
 METACOGNITIVE REFLECTION PROMPTS (use naturally throughout, vary them):
 • "What does your choice here reveal about how you approach this kind of situation?"
@@ -99,40 +117,6 @@ IMPORTANT:
 - When interpreting results, use the user's own language and examples back to them.
 - Never tell users what they should do. Help them see what they currently do and what else is possible.
 - You may run fewer than 8 questions if the user's answers are detailed enough to score confidently. Use 4 questions minimum per framework (2 per axis).`;
-
-// ─────────────────────────────────────────────────
-// STYLE COLOURS
-// ─────────────────────────────────────────────────
-
-const FRAMEWORK_COLORS = {
-  thinking: {
-    Focused: "#ff6f20", Playful: "#bed600",
-    Incremental: "#9f60b5", Breakaway: "#009ddb",
-    default: "#ff6f20",
-  },
-  managing: {
-    Efficient: "#ff6f20", Supportive: "#bed600",
-    Inquisitive: "#9f60b5", Venturing: "#009ddb",
-    default: "#ff6f20",
-  },
-  leading: {
-    Troubleshooter: "#ff6f20", "Co-creator": "#bed600",
-    Challenger: "#9f60b5", Transformer: "#009ddb",
-    default: "#ff6f20",
-  },
-};
-
-const FRAMEWORK_BACKGROUNDS = {
-  thinking: "/images/thinking-background.png",
-  managing: "/images/managing-background.png",
-  leading: "/images/leading-background.png",
-};
-
-const FRAMEWORK_LABELS = {
-  thinking: "Kinetic Thinking Style",
-  managing: "Kinetic Managing Style",
-  leading: "Kinetic Leading Style",
-};
 
 // ─────────────────────────────────────────────────
 // PARSE STYLE RESULTS FROM ASSISTANT MESSAGES

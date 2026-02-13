@@ -2,33 +2,39 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import mammoth from "mammoth";
+import { FRAMEWORKS, frameworkSummaryForPrompt } from "@kinetic/frameworks";
+
+// Build system prompt from shared framework definitions
+const fw = FRAMEWORKS.thinking;
+const d1 = fw.dimensions.dim1;
+const d2 = fw.dimensions.dim2;
+const styleList = Object.entries(fw.styles)
+  .map(([name, s]) => `- ${name.toUpperCase()} (${s.poles[0].toLowerCase()} + ${s.poles[1].toLowerCase()}): ${s.description.split(".")[0]}`)
+  .join("\n");
 
 const SYSTEM_PROMPT = `You are an analytical tool for mapping text onto the Kinetic Thinking Styles (KTS) framework developed by Dimov & Pistrui (2023).
 
 The KTS framework has two dimensions:
 
-DIMENSION 1: ATTITUDE TOWARDS UNCERTAINTY (What we do)
-This is a continuum from REASON to PLAY.
-- REASON pole: The text emphasises rational justification for actions, evidence-based decision making, anticipation and evaluation of consequences, accountability, structured planning, deliberate strategy. Language markers: causal reasoning ("because", "therefore", "in order to"), evidence references ("data shows", "analysis indicates"), risk mitigation, goal-outcome chains, evaluation criteria, due diligence.
-- PLAY pole: The text emphasises probing, experimenting, acting to see what happens, tolerance of ambiguity, improvisation, serendipity, trial and error. Language markers: exploratory framing ("let's see", "what if", "we tried"), comfort with not knowing, pivot language, emergence, surprise as positive, action for its own sake, iterative discovery.
+DIMENSION 1: ATTITUDE TOWARDS ${d1.name.toUpperCase()} (What we do)
+This is a continuum from ${d1.left.toUpperCase()} to ${d1.right.toUpperCase()}.
+- ${d1.left.toUpperCase()} pole: The text emphasises rational justification for actions, evidence-based decision making, anticipation and evaluation of consequences, accountability, structured planning, deliberate strategy. Language markers: causal reasoning ("because", "therefore", "in order to"), evidence references ("data shows", "analysis indicates"), risk mitigation, goal-outcome chains, evaluation criteria, due diligence.
+- ${d1.right.toUpperCase()} pole: The text emphasises probing, experimenting, acting to see what happens, tolerance of ambiguity, improvisation, serendipity, trial and error. Language markers: exploratory framing ("let's see", "what if", "we tried"), comfort with not knowing, pivot language, emergence, surprise as positive, action for its own sake, iterative discovery.
 
-DIMENSION 2: ATTITUDE TOWARDS POSSIBILITY (What we see)
-This is a continuum from STRUCTURE to OPENNESS.
-- STRUCTURE pole: The text operates within established categories and frameworks, evaluates fit and relevance of information against existing schema, focuses on what IS, convergent reasoning, validation against known patterns. Language markers: categorical language, taxonomies, benchmarking, fit assessment, established metrics, industry norms, historical precedent, "best practices".
-- OPENNESS pole: The text reframes situations, imagines alternatives, signals discontinuity, sees novel possibilities, focuses on what is NOT YET, divergent reasoning, future-oriented speculation. Language markers: metaphorical/analogical thinking, reframing ("what if we think of this as..."), possibility language, imagination, vision of transformation, disruption, questioning assumptions.
+DIMENSION 2: ATTITUDE TOWARDS ${d2.name.toUpperCase()} (What we see)
+This is a continuum from ${d2.left.toUpperCase()} to ${d2.right.toUpperCase()}.
+- ${d2.left.toUpperCase()} pole: The text operates within established categories and frameworks, evaluates fit and relevance of information against existing schema, focuses on what IS, convergent reasoning, validation against known patterns. Language markers: categorical language, taxonomies, benchmarking, fit assessment, established metrics, industry norms, historical precedent, "best practices".
+- ${d2.right.toUpperCase()} pole: The text reframes situations, imagines alternatives, signals discontinuity, sees novel possibilities, focuses on what is NOT YET, divergent reasoning, future-oriented speculation. Language markers: metaphorical/analogical thinking, reframing ("what if we think of this as..."), possibility language, imagination, vision of transformation, disruption, questioning assumptions.
 
 SCORING: Score each dimension from -10 to +10.
-- Attitude towards uncertainty: -10 = pure reason, +10 = pure play
-- Attitude towards possibility: -10 = pure structure, +10 = pure openness
+- Attitude towards ${d1.name.toLowerCase()}: -10 = pure ${d1.left.toLowerCase()}, +10 = pure ${d1.right.toLowerCase()}
+- Attitude towards ${d2.name.toLowerCase()}: -10 = pure ${d2.left.toLowerCase()}, +10 = pure ${d2.right.toLowerCase()}
 
 The four quadrants are:
-- FOCUSED (reason + structure): Systematic, evidence-based, operating within known frameworks
-- INCREMENTAL (reason + openness): Sees new possibilities but acts deliberately and with justification
-- PLAYFUL (play + structure): Experiments within established frameworks, tests boundaries pragmatically  
-- BREAKAWAY (play + openness): Experiments freely, reimagines possibilities, embraces radical novelty
+${styleList}
 
 Respond ONLY with valid JSON in this exact format, no markdown, no backticks:
-{"uncertainty_score": <number -10 to 10>, "possibility_score": <number -10 to 10>, "style": "<Focused|Incremental|Playful|Breakaway>", "uncertainty_reasoning": "<2-3 sentences explaining the uncertainty dimension score with specific textual evidence>", "possibility_reasoning": "<2-3 sentences explaining the possibility dimension score with specific textual evidence>", "key_indicators": ["<phrase or pattern 1>", "<phrase or pattern 2>", "<phrase or pattern 3>", "<phrase or pattern 4>", "<phrase or pattern 5>"], "summary": "<1-2 sentence overall interpretation of the thinking style revealed in this text>"}`;
+{"uncertainty_score": <number -10 to 10>, "possibility_score": <number -10 to 10>, "style": "<${Object.keys(fw.styles).join("|")}>", "uncertainty_reasoning": "<2-3 sentences explaining the uncertainty dimension score with specific textual evidence>", "possibility_reasoning": "<2-3 sentences explaining the possibility dimension score with specific textual evidence>", "key_indicators": ["<phrase or pattern 1>", "<phrase or pattern 2>", "<phrase or pattern 3>", "<phrase or pattern 4>", "<phrase or pattern 5>"], "summary": "<1-2 sentence overall interpretation of the thinking style revealed in this text>"}`;
 
 const SAMPLE_TEXTS = {
   "Personal reflection": `I am an Industrial Engineer – I believe in setting objectives, determining the best way to achieve them, and execute accordingly. I value rational thinking and structure. I gathered tons of information and was in a far better position to judge the viability of the project, but still, a lot of pieces of the puzzle didn't click. For example, there was a problem with finding the right domain experts that can build this type of complex software. And the funding was not guaranteed, so I had to drop it. I naturally tend to make decisions based on concrete data. Be it statistics, marketing, primary or secondary research. I like to have lots of data to use in making a decision.`,
@@ -37,12 +43,11 @@ const SAMPLE_TEXTS = {
   "Design thinking workshop": `Today we threw out the brief entirely. Instead of solving the problem as stated, we asked: whose problem is this really? We spent the morning in the field, just watching and listening, letting patterns emerge rather than hunting for them. One conversation with a nightshift nurse completely upended our assumptions — what we thought was a logistics problem turned out to be a trust problem. We prototyped three completely different directions in the afternoon, deliberately making them rough and provocative. The one that got the strongest reaction — both positive and negative — is the one we're pursuing tomorrow. We have no idea if it'll work, but it feels alive.`
 };
 
-const styleColors = {
-  Focused: { accent: "#ff6f20" },
-  Incremental: { accent: "#9f60b5" },
-  Playful: { accent: "#bed600" },
-  Breakaway: { accent: "#009ddb" },
-};
+const styleColors = Object.fromEntries(
+  Object.entries(FRAMEWORKS.thinking.colors)
+    .filter(([k]) => k !== "default")
+    .map(([k, v]) => [k, { accent: v }])
+);
 
 function KTSMatrix({ uncertaintyScore, possibilityScore, style }) {
   const canvasRef = useRef(null);
