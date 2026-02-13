@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 
-const PLATFORM_URL = process.env.NEXT_PUBLIC_PLATFORM_URL || "";
 const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
 const APPS = [
@@ -14,10 +13,10 @@ const APPS = [
 ];
 
 function getHref(app) {
-  if (PLATFORM_URL) {
-    return PLATFORM_URL + app.path;
-  }
-  return `http://localhost:${app.devPort}${app.path}`;
+    if (typeof window !== "undefined" && window.location.hostname === "localhost") {
+      return `http://localhost:${app.devPort}${app.path}`;
+    }
+    return app.path;
 }
 
 export default function PlatformNav({ currentApp }) {
